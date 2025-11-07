@@ -1,6 +1,6 @@
 FROM python:3-slim
 
-ENV TZ=America/Toronto MQTT_ADDR MQTT_PORT=1883 MQTT_USER MQTT_PASS
+ENV TZ=America/Toronto MQTT_ADDR=localhost MQTT_PORT=1883
 
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
