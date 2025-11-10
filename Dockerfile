@@ -8,6 +8,6 @@ RUN groupadd -g 1000 Barrier && useradd -u 1000 -g Barrier -ms /bin/bash Barrier
 
 USER Barrier
 
-RUN pip install paho-mqtt "psycopg[c]"
+RUN pip install paho-mqtt psycopg
 
 CMD ["python","/home/Barrier/Barrier.py"]
