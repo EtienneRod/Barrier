@@ -10,8 +10,8 @@ RUN groupadd -g 1000 Barrier && useradd -u 1000 -g Barrier -ms /bin/bash Barrier
 
 USER Barrier
 
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 
-RUN pip install paho-mqtt mariadb
+RUN pip3 install paho-mqtt mariadb
 
 CMD ["python","/home/Barrier/Barrier.py"]
