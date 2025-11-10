@@ -22,6 +22,6 @@ USER Barrier
 
 RUN pip3 install --upgrade pip
 
-RUN pip3 install paho-mqtt mariadb
+RUN pip3 install paho-mqtt
 
 CMD ["python","/home/Barrier/Barrier.py"]
