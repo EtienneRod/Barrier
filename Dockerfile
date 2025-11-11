@@ -6,7 +6,7 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezo
 
 RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash
 
-RUN apt-get update && apt install -y libmariadb-dev libmariadb3 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt install -y libmariadb-dev libmariadb3 gcc && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g 1000 Barrier && useradd -u 1000 -g Barrier -ms /bin/bash Barrier
 
