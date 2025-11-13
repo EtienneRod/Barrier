@@ -1,15 +1,12 @@
 FROM python:3-slim
 
 ENV TZ=America/Toronto
-
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
-RUN apt-get update && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt install -y libmariadb3 libmariadb-dev gcc && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -g 1000 Barrier && useradd -u 1000 -g Barrier -ms /bin/bash Barrier
+WORKDIR /Barrier
 
-USER Barrier
+RUN python -m venv venv && . venv/bin/activate && pip install --no-cache-dir paho-mqtt mariadb && deactivate
 
-RUN pip install paho-mqtt
-
-CMD ["python","/home/Barrier/Barrier.py"]
+CMD ["venv/bin/python","Barrier.py"]
