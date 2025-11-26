@@ -1,0 +1,63 @@
+  mosquitto:
+    container_name: mosquitto
+    image: docker.io/eclipse-mosquitto:latest
+    restart: unless-stopped
+    user: "1000:1000"
+    ports:
+      - "1883:1883"
+    environment:
+      TZ: "America/Toronto"
+    volumes:
+      - "/home/Etienne/Mosquitto:/mosquitto"
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: "America/Toronto"
+      MARIADB_DATABASE: "my_db_name"
+      MARIADB_USER: "my_db_user"
+      MARIADB_PASSWORD: "my_db_password"
+      MARIADB_RANDOM_ROOT_PASSWORD: 1
+    volumes:
+      - /home/Etienne/Barrier/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - /home/Etienne/MariaDB:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+
+  barrier1:
+    container_name: barrier1
+    build: https://github.com/EtienneRod/Barrier.git
+    user: "1000:1000"
+    environment:
+      TZ: "America/Toronto"
+      name: "Barrier 1"
+      latitude: "45.516294"
+      longitude: "-73.769440"
+      owner: "MTQ"
+      firmware: "2025.10"
+      software: "2025.08-01"
+      modem: "LTE V2.4.1"
+      ip: "28.30.1.10"
+      fqdn: "barrier1.mtq.versilis.com"
+      position: "closed"
+      temperature: 62
+      signal: -54
+      mqtt_host: "mosquitto"
+      db_user: "my_db_user"
+      db_password: "my_db_password"
+      db_name: "my_db_name"
+      db_host: "mariadb"
+      
+    volumes:
+      - /home/Etienne/Barrier/Barrier.py:/Barrier/Barrier.py
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
